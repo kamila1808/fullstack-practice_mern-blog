@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import authRoute from "./routes/auth.js"
+import authRoute from "./routes/auth.js";
 
 const app = express();
 dotenv.config();
@@ -18,16 +18,14 @@ app.use(cors()); //разрешить отправлять запросы с р�
 app.use(express.json()); //чтобы express понимал, что из фронтенда мы будем отправлять данные в формате json
 
 //Routes
-app.use("/api/auth", authRoute)
+app.use("/api/auth", authRoute);
 
 async function start() {
   try {
     await mongoose.connect(
       `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.a2fzmjd.mongodb.net/test`
     );
-    app.listen(PORT, () => {
-      console.log("Server started");
-    });
+    app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
   } catch (error) {
     console.log(error);
   }

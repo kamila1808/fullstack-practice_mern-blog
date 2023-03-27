@@ -10,7 +10,7 @@ export const register = async (req, res) => {
     const isUsed = await User.findOne({ username });
 
     if (isUsed) {
-      return res.json({ message: "Данный username уже занят" });
+      return res.json({ message: "Данное имя пользователя уже занято" });
     }
 
     const salt = bcrypt.genSaltSync(10);
@@ -20,6 +20,14 @@ export const register = async (req, res) => {
       username,
       password: hash,
     });
+
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
 
     await newUser.save();
 

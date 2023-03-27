@@ -1,7 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { loginUser } from "../redux/features/auth/authSlice";
 
 export const LoginPage = () => {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const { status } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (status) toast(status);
+  }, [status, navigate]);
+
+  const handleSubmit = () => {
+    try {
+      dispatch(loginUser({ userName, password }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
@@ -12,6 +35,8 @@ export const LoginPage = () => {
         Имя пользователя:
         <input
           type="text"
+          value={userName}
+          onChange={(event) => setUserName(event.target.value)}
           placeholder="Введите имя пользователя"
           className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-s outline-none placeholder:text-gray-700 mb-5"
         />
@@ -20,6 +45,8 @@ export const LoginPage = () => {
         Пароль:
         <input
           type="text"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
           placeholder="Введите пароль"
           className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-s outline-none placeholder:text-gray-700 mb-5"
         />
@@ -27,6 +54,7 @@ export const LoginPage = () => {
       <div className="flex gap-8 justify-center mt-4">
         <button
           type="submit"
+          onClick={handleSubmit}
           className="flex justify-center items-center text-s text-white rounded-sm py-w px-4 bg-gray-600"
         >
           Войти
@@ -34,7 +62,9 @@ export const LoginPage = () => {
         <Link
           to="/register"
           className="flex justify-center items-center text-s text-white"
-        >Нет аккаунта?</Link>
+        >
+          Нет аккаунта?
+        </Link>
       </div>
     </form>
   );
