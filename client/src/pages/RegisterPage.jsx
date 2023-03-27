@@ -1,28 +1,33 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { toast } from "react-toastify";
 
 import { registerUser } from "../redux/features/auth/authSlice";
+import { checkIsAuth } from "../redux/features/auth/authSlice";
 
 export const RegisterPage = () => {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { status } = useSelector((state) => state.auth);
+  const isAuth = useSelector(checkIsAuth);
+
+  const navigate = useNavigate()
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (status) {
       toast(status);
     }
-  }, [status]);
+    if(isAuth) navigate('/')
+  }, [status, isAuth, navigate]);
 
   const handleSubmit = () => {
     try {
-      dispatch(registerUser({ userName, password }));
-      setUserName("");
+      dispatch(registerUser({ username, password }));
+      setUsername("");
       setPassword("");
     } catch (error) {
       console.log(error);
@@ -39,8 +44,8 @@ export const RegisterPage = () => {
         Имя пользователя:
         <input
           type="text"
-          value={userName}
-          onChange={(event) => setUserName(event.target.value)}
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
           placeholder="Введите имя пользователя"
           className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-s outline-none placeholder:text-gray-700 mb-5"
         />

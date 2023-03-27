@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../../utils/axios";
+import axios from '../../../utils/axios'
 
 const initialState = {
   user: null,
@@ -12,7 +12,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ username, password }) => {
     try {
-      const { data } = await axios.post("/auth/register", {
+      const { data } = await axios.post('/auth/register', {
         username,
         password,
       });
@@ -43,6 +43,15 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const getMe = createAsyncThunk("auth/loginUser", async () => {
+  try {
+    const { data } = await axios.get("/auth/me");
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export const authSlice = createSlice({
   name: "auth",
@@ -86,7 +95,25 @@ export const authSlice = createSlice({
       state.status = action.payload.message;
       state.isLoading = false;
     },
+    // Проверка авторизации
+    [getMe.pending]: (state) => {
+      state.isLoading = true;
+      state.status = null;
+    },
+    [getMe.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.status = null;
+      state.user = action.payload?.user;
+      state.token = action.payload?.token;
+    },
+    [getMe.rejectWithValue]: (state, action) => {
+      state.status = action.payload.message;
+      state.isLoading = false;
+    },
   },
 });
 
+export const checkIsAuth = (state) => Boolean(state.auth.token)
+
+export const {logout} = authSlice.actions
 export default authSlice.reducer;

@@ -4,22 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { loginUser } from "../redux/features/auth/authSlice";
+import { checkIsAuth, loginUser } from "../redux/features/auth/authSlice";
 
 export const LoginPage = () => {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { status } = useSelector((state) => state.auth);
+  const isAuth = useSelector(checkIsAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (status) toast(status);
-  }, [status, navigate]);
+    if (isAuth) navigate("/");
+  }, [status, isAuth, navigate]);
 
   const handleSubmit = () => {
     try {
-      dispatch(loginUser({ userName, password }));
+      dispatch(loginUser({ username, password }));
     } catch (error) {
       console.log(error);
     }
@@ -35,8 +37,8 @@ export const LoginPage = () => {
         Имя пользователя:
         <input
           type="text"
-          value={userName}
-          onChange={(event) => setUserName(event.target.value)}
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
           placeholder="Введите имя пользователя"
           className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-s outline-none placeholder:text-gray-700 mb-5"
         />
