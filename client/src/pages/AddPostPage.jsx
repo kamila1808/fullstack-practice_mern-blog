@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../redux/features/post/postSlice";
@@ -18,54 +17,52 @@ export const AddPostPage = () => {
       data.append("title", title);
       data.append("text", text);
       data.append("image", image);
-      dispatch(createPost());
+      dispatch(createPost(data));
       navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
-
   const clearFormHandler = () => {
     setText("");
     setTitle("");
   };
 
   return (
-    <form
-      className="w-1/3 mx-auto py-10"
-      onSubmit={(event) => event.preventDefault()}
-    >
+    <form className="w-1/3 mx-auto py-10" onSubmit={(e) => e.preventDefault()}>
       <label className="text-gray-300 py-2 bg-gray-600 text-s mt-2 flex items-center justify-center border-2 border-dotted cursor-pointer">
-        Прикрепить изображение:
+        Прикрепить изорбажение:
         <input
           type="file"
           className="hidden"
-          onChange={(event) => setImage(event.target.files[0])}
+          onChange={(e) => setImage(e.target.files[0])}
         />
       </label>
       <div className="flex object-cover py-2">
-        {image && <img src={URL.createObjectURL(image)} alt="" />}
+        {image && <img src={URL.createObjectURL(image)} alt={image.name} />}
       </div>
+
       <label className="text-s text-white opacity-70">
         Заголовок поста:
         <input
           type="text"
           value={title}
-          onChange={(event) => setTitle(event.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder="Заголовок"
           className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-s outline-none placeholder:text-gray-700"
         />
       </label>
+
       <label className="text-s text-white opacity-70">
         Текст поста:
         <textarea
-          type="text"
+          onChange={(e) => setText(e.target.value)}
           value={text}
-          onChange={(event) => setText(event.target.value)}
           placeholder="Текст поста"
           className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-s outline-none resize-none h-40 placeholder:text-gray-700"
         />
       </label>
+
       <div className="flex gap-8 items-center justify-center mt-4">
         <button
           onClick={submitHandler}
@@ -73,6 +70,7 @@ export const AddPostPage = () => {
         >
           Добавить
         </button>
+
         <button
           onClick={clearFormHandler}
           className="flex justify-center items-center bg-red-500 text-s text-white rounded-sm py-2 px-4"
