@@ -72,13 +72,13 @@ export const PostPage = () => {
     fetchComments();
   }, [fetchComments]);
 
-  if (!post) {
-    return (
-      <div className="text-xl text-center text-white py-10">Загрузка...</div>
-    );
-  }
+  // if (!post) {
+  //   return (
+  //     <div className="text-xl text-center text-white py-10">Загрузка...</div>
+  //   );
+  // }
   return (
-    <div>
+  post && (  <div>
       <button className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4">
         <Link className="flex" to={"/"}>
           Назад
@@ -95,7 +95,7 @@ export const PostPage = () => {
             >
               {post?.imgUrl && (
                 <img
-                  src={`http://localhost:3002/${post.imgUrl}`}
+                  src={`http://localhost:3000/${post.imgUrl}`}
                   alt="img"
                   className="object-cover w-full"
                 />
@@ -162,6 +162,6 @@ export const PostPage = () => {
           ))}
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
